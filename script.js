@@ -8,19 +8,25 @@ async function init() {
 }
 
 function loadQuestion() {
+    currentQuestion = randomSelect();
     const question = list[currentQuestion]; // Используем данные из загруженного CSV
+
     if (!question) {
         console.error('Вопрос не найден');
         return;
     }
     
     document.getElementById("spanish-word").textContent = question[1]; // Испанское слово из второго столбца
-    const russianWords = shuffleArray(list.map(item => item[0])); // Берем все русские слова и перемешиваем
+    const russianWords = list.map(item => item[0]); 
+
+    let answers = [question[0], russianWords[randomSelect()], russianWords[randomSelect()], russianWords[randomSelect()]];
+
+    answers = shuffleArray(answers);
     
-    document.getElementById("option1").textContent = russianWords[0];
-    document.getElementById("option2").textContent = russianWords[1];
-    document.getElementById("option3").textContent = russianWords[2];
-    document.getElementById("option4").textContent = russianWords[3];
+    document.getElementById("option1").textContent = answers[0];
+    document.getElementById("option2").textContent = answers[1];
+    document.getElementById("option3").textContent = answers[2];
+    document.getElementById("option4").textContent = answers[3];
     
     resetButtons();
 }
@@ -64,6 +70,11 @@ function parseCSV(csvText) {
     return rows.map(row => row.split(','));
 }
 
+function randomSelect()
+{
+    return Math.floor(Math.random() * (list.length-1));
+}
+
 // Функция для перемешивания массива
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -72,6 +83,5 @@ function shuffleArray(array) {
     }
     return array;
 }
-
 // Инициализация
 init();
