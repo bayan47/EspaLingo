@@ -1,30 +1,27 @@
-// Примерные данные для тестирования (позже замените на данные из Google Sheets)
-const data = [
-    { spanish: "gato", russian: ["кот", "собака", "лошадь", "рыба"], correct: 0 },
-    { spanish: "perro", russian: ["кот", "собака", "лошадь", "рыба"], correct: 1 },
-    { spanish: "caballo", russian: ["кот", "собака", "лошадь", "рыба"], correct: 2 },
-    { spanish: "pez", russian: ["кот", "собака", "лошадь", "рыба"], correct: 3 }
-];
-
-
 let list = [];
-let newData = [];
-
 let currentQuestion = 0;
 
 async function init() {
-    list = loadCSV();
-    console.info(list.length);
+    list = await loadCSV(); // Ожидаем завершения загрузки CSV файла
+    console.info(`Загружено строк: ${list.length}`);
+    loadQuestion(); // После загрузки данных сразу загружаем первый вопрос
 }
 
 function loadQuestion() {
-    const question = data[currentQuestion];
-    document.getElementById("spanish-word").textContent = question.spanish;
-    document.getElementById("option1").textContent = question.russian[0];
-    document.getElementById("option2").textContent = question.russian[1];
-    document.getElementById("option3").textContent = question.russian[2];
-    document.getElementById("option4").textContent = question.russian[3];
-
+    const question = list[currentQuestion]; // Используем данные из загруженного CSV
+    if (!question) {
+        console.error('Вопрос не найден');
+        return;
+    }
+    
+    document.getElementById("spanish-word").textContent = question[1]; // Испанское слово из второго столбца
+    const russianWords = shuffleArray(list.map(item => item[0])); // Берем все русские слова и перемешиваем
+    
+    document.getElementById("option1").textContent = russianWords[0];
+    document.getElementById("option2").textContent = russianWords[1];
+    document.getElementById("option3").textContent = russianWords[2];
+    document.getElementById("option4").textContent = russianWords[3];
+    
     resetButtons();
 }
 
@@ -35,21 +32,24 @@ function resetButtons() {
 }
 
 function checkAnswer(selectedOption) {
-    const question = data[currentQuestion];
+    const question = list[currentQuestion];
     const buttons = document.querySelectorAll('button');
+    
+    // Найдем правильный ответ среди кнопок
+    const correctIndex = Array.from(buttons).findIndex(button => button.textContent === question[0]);
 
-    if (selectedOption === question.correct) {
+    if (selectedOption === correctIndex) {
         buttons[selectedOption].classList.add('correct');
     } else {
         buttons[selectedOption].classList.add('incorrect');
-        buttons[question.correct].classList.add('correct');
+        buttons[correctIndex].classList.add('correct');
     }
 
     setTimeout(nextQuestion, 3000);
 }
 
 function nextQuestion() {
-    currentQuestion = (currentQuestion + 1) % data.length;
+    currentQuestion = (currentQuestion + 1) % list.length;
     loadQuestion();
 }
 
@@ -64,23 +64,14 @@ function parseCSV(csvText) {
     return rows.map(row => row.split(','));
 }
 
-async function getRowData(rowNumber) {
-    if (rowNumber > 0 && rowNumber <= list.length) {
-        return data[rowNumber - 1];  // Индексация с 0, поэтому вычитаем 1
-    } else {
-        console.error('Номер строки выходит за пределы данных');
-        return [];
+// Функция для перемешивания массива
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
 }
 
-async function fetchData(rowNumber) {
-    try {
-        const rowData = await getRowData(rowNumber);
-        console.log(`Данные строки ${rowNumber}:`, rowData);  // Выводим данные в консоль
-    } catch (err) {
-        console.error('Ошибка при получении данных:', err);
-    }
-}
-
-
+// Инициализация
 init();
