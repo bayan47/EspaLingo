@@ -67,7 +67,7 @@ async function loadCSV() {
 
 function parseCSV(csvText) {
     const rows = csvText.trim().split('\n');
-    return rows.map(row => row.split(','));
+    return rows.map(row => row.split(';'));
 }
 
 function randomSelect()
