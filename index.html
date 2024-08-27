@@ -55,8 +55,43 @@
             color: white;
         }
     </style>
+
+<script src="https://apis.google.com/js/api.js"></script>
+    <script>
+        const API_KEY = 'AIzaSyAPKzr8K9zU17M4Y4olbqme3wgL7tZKqQ4';
+        const SPREADSHEET_ID = '1VHVtrj_PgGqgAqTbtHkyPyfBQxN0SPCQXJAPN4zAK30';
+
+        function loadClient() {
+            gapi.client.setApiKey(API_KEY);
+            return gapi.client.load("https://sheets.googleapis.com/$discovery/rest?version=v4")
+                .then(() => console.log("GAPI client loaded for API"))
+                .catch(err => console.error("Error loading GAPI client for API", err));
+        }
+
+        function getRowData(rowNumber) {
+            const range = `Sheet1!A${rowNumber}:B${rowNumber}`;
+            return gapi.client.sheets.spreadsheets.values.get({
+                spreadsheetId: SPREADSHEET_ID,
+                range: range,
+            }).then(response => {
+                const values = response.result.values;
+                if (values && values.length > 0) {
+                    return values[0];  // Вернем массив значений из строки
+                } else {
+                    console.error("No data found.");
+                    return [];
+                }
+            }).catch(err => console.error("Error fetching data", err));
+        }
+
+        function init() {
+            gapi.load("client", loadClient);
+        }
+    </script>
+
 </head>
-<body>
+<body onload="init()">
+    <button onclick="fetchData()">Fetch Data</button>
     <div class="word" id="spanish-word"></div>
     <div class="buttons">
         <button id="option1" onclick="checkAnswer(0)"></button>
@@ -64,6 +99,18 @@
         <button id="option3" onclick="checkAnswer(2)"></button>
         <button id="option4" onclick="checkAnswer(3)"></button>
     </div>
+
+    <script>
+        async function fetchData() {
+            try {
+                const rowNumber = 2;  // Пример строки
+                const data = await getRowData(rowNumber);
+                console.log(data);  // Выводим данные в консоль
+            } catch (err) {
+                console.error("Error fetching data", err);
+            }
+        }
+    </script>
 
     <script src="script.js"></script>
 </body>
