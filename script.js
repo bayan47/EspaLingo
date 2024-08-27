@@ -83,4 +83,4 @@ async function fetchData(rowNumber) {
 }
 
 
-//loadQuestion();
+init();
