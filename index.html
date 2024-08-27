@@ -57,42 +57,6 @@
     </style>
 </head>
 <body onload="init()">
-    <button onclick="fetchData()">Fetch Data</button>
-
-    <button onclick="fetchData(2)">Получить данные из строки 2</button>
-
-    <script>
-        async function loadCSV() {
-            const response = await fetch('list.csv');
-            const csvText = await response.text();
-            return parseCSV(csvText);
-        }
-
-        function parseCSV(csvText) {
-            const rows = csvText.trim().split('\n');
-            return rows.map(row => row.split(','));
-        }
-
-        async function getRowData(rowNumber) {
-            const data = await loadCSV();
-            if (rowNumber > 0 && rowNumber <= data.length) {
-                return data[rowNumber - 1];  // Индексация с 0, поэтому вычитаем 1
-            } else {
-                console.error('Номер строки выходит за пределы данных');
-                return [];
-            }
-        }
-
-        async function fetchData(rowNumber) {
-            try {
-                const rowData = await getRowData(rowNumber);
-                console.log(`Данные строки ${rowNumber}:`, rowData);  // Выводим данные в консоль
-            } catch (err) {
-                console.error('Ошибка при получении данных:', err);
-            }
-        }
-    </script>
-
 
 
     <div class="word" id="spanish-word"></div>
