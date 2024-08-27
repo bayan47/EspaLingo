@@ -7,14 +7,14 @@ const data = [
 ];
 
 
-list = [];
-newData = [];
+let list = [];
+let newData = [];
 
 let currentQuestion = 0;
 
-function init() {
+async function init() {
     list = loadCSV();
-    print(list.length);
+    console.info(list.length);
 }
 
 function loadQuestion() {
