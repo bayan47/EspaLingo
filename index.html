@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EspaLingo</title>
-        <style>
+            <style>
         body {
             display: flex;
             flex-direction: column;
@@ -27,11 +27,14 @@
             margin-bottom: 20px;
             color: white;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
         }
         .buttons {
             display: flex;
-            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 20px;
+            max-width: 100%;
         }
         button {
             padding: 15px 30px;
@@ -42,6 +45,8 @@
             background-color: #ffffff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s ease;
+            flex: 1 1 calc(50% - 40px); /* Делаем кнопки гибкими */
+            max-width: 300px; /* Ограничиваем максимальную ширину кнопок */
         }
         button:hover {
             transform: scale(1.05);
@@ -53,6 +58,29 @@
         .incorrect {
             background-color: red;
             color: white;
+        }
+
+        /* Адаптация для экранов шириной до 768px (планшеты и мобильные устройства) */
+        @media (max-width: 768px) {
+            .word {
+                font-size: 36px;
+            }
+            button {
+                font-size: 20px;
+                padding: 12px 20px;
+                flex: 1 1 calc(100% - 40px); /* Кнопки занимают всю ширину */
+            }
+        }
+
+        /* Адаптация для экранов шириной до 480px (мобильные устройства) */
+        @media (max-width: 480px) {
+            .word {
+                font-size: 28px;
+            }
+            button {
+                font-size: 18px;
+                padding: 10px 15px;
+            }
         }
     </style>
 </head>
